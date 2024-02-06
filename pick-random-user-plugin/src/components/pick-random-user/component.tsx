@@ -1,0 +1,101 @@
+import * as React from 'react';
+import { useState, useEffect } from 'react';
+
+import { BbbPluginSdk, PluginApi } from 'bigbluebutton-html-plugin-sdk';
+import { PickRandomUserPluginProps, PickedUser, UsersMoreInformationGraphqlResponse } from './types';
+import { USERS_MORE_INFORMATION } from './queries';
+import { PickUserModal } from '../modal/component';
+import { Role } from './enums';
+import ActionButtonDropdownManager from '../extensible-areas/action-button-dropdown/component';
+
+function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
+  BbbPluginSdk.initialize(uuid);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [pickedUser, setPickedUser] = useState<PickedUser | undefined>();
+  const [userFilterViewer, setUserFilterViewer] = useState<boolean>(true);
+  const pluginApi: PluginApi = BbbPluginSdk.getPluginApi(uuid);
+  const currentUserInfo = pluginApi.useCurrentUser();
+  const { data: currentUser } = currentUserInfo;
+  const allUsersInfo = pluginApi
+    .useCustomSubscription<UsersMoreInformationGraphqlResponse>(USERS_MORE_INFORMATION);
+  const { data: allUsers } = allUsersInfo;
+
+  const [pickedUserFromDataChannelResponse, dispatcherPickedUser, deletionFunction] = pluginApi.useDataChannel<PickedUser>('pickRandomUser');
+
+  const pickedUserFromDataChannel = {
+    data: {
+      pluginDataChannelMessage: pickedUserFromDataChannelResponse?.data?.pluginDataChannelMessage,
+    },
+    loading: false,
+  };
+
+  const usersToBePicked: UsersMoreInformationGraphqlResponse = {
+    user: allUsers?.user.filter((user) => {
+      let roleFilter = true;
+      if (userFilterViewer) roleFilter = user.role === Role.VIEWER;
+      return roleFilter
+          && pickedUserFromDataChannel
+            .data?.pluginDataChannelMessage?.findIndex(
+              (u) => u?.payloadJson.userId === user.userId,
+            ) === -1;
+    }),
+  };
+
+  const handlePickRandomUser = () => {
+    if (usersToBePicked && usersToBePicked.user.length > 0 && currentUser?.presenter) {
+      const randomIndex = Math.floor(Math.random() * usersToBePicked.user.length);
+      const randomlyPickedUser = usersToBePicked.user[randomIndex];
+      dispatcherPickedUser(randomlyPickedUser);
+    }
+    setShowModal(true);
+  };
+
+  const handleCloseModal = (): void => {
+    setShowModal(false);
+  };
+
+  useEffect(() => {
+    if (pickedUserFromDataChannel.data
+      && pickedUserFromDataChannel.data?.pluginDataChannelMessage?.length > 0) {
+      const pickedUserToUpdate = pickedUserFromDataChannel
+        .data?.pluginDataChannelMessage[
+          pickedUserFromDataChannel.data.pluginDataChannelMessage.length - 1
+        ];
+      setPickedUser(pickedUserToUpdate.payloadJson);
+      setShowModal(true);
+    } else if (pickedUserFromDataChannel.data
+        && pickedUserFromDataChannel.data?.pluginDataChannelMessage?.length === 0) {
+      setPickedUser(undefined);
+      if (currentUser && !currentUser.presenter) setShowModal(false);
+    }
+  }, [pickedUserFromDataChannelResponse]);
+
+  return (
+    <>
+      <PickUserModal
+        {...{
+          showModal,
+          handleCloseModal,
+          users: usersToBePicked?.user,
+          pickedUser,
+          handlePickRandomUser,
+          currentUser,
+          userFilterViewer,
+          setUserFilterViewer,
+          dataChannelPickedUsers: pickedUserFromDataChannel.data?.pluginDataChannelMessage,
+          deletionFunction,
+        }}
+      />
+      <ActionButtonDropdownManager
+        {...{
+          currentUser,
+          pluginApi,
+          setShowModal,
+          currentUserInfo,
+        }}
+      />
+    </>
+  );
+}
+
+export default PickRandomUserPlugin;
