@@ -1,4 +1,5 @@
 export interface PickedUser {
+    presenter: boolean;
     userId: string;
     name: string;
     role: string;

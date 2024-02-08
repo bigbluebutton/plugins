@@ -18,7 +18,7 @@ const makeHorizontalListOfNames = (list?: PickedUser[]) => {
 
 const makeVerticalListOfNames = (
   list?: DataChannelArrayMessages<PickedUser>[],
-) => list?.map((u) => {
+) => list?.filter((u) => !!u.payloadJson).map((u) => {
   const time = new Date(u.createdAt);
   return (
     <li key={u.payloadJson.userId}>
@@ -35,6 +35,8 @@ const makeVerticalListOfNames = (
 
 export function PresenterViewComponent(props: PresenterViewComponentProps) {
   const {
+    filterOutPresenter,
+    setFilterOutPresenter,
     userFilterViewer,
     setUserFilterViewer,
     deletionFunction,
@@ -54,7 +56,7 @@ export function PresenterViewComponent(props: PresenterViewComponentProps) {
       <div className="moderator-view-wrapper">
         <p className="moderator-view-label">Options</p>
         <p className="moderator-view-value">
-          <label htmlFor="skipModerators">
+          <label className="check-box-label-container" htmlFor="skipModerators">
             <input
               type="checkbox"
               id="skipModerators"
@@ -65,7 +67,20 @@ export function PresenterViewComponent(props: PresenterViewComponentProps) {
               name="options"
               value="skipModerators"
             />
-            Skip moderators
+            <span className="check-box-label">Skip moderators</span>
+          </label>
+          <label className="check-box-label-container" htmlFor="skipPresenter">
+            <input
+              type="checkbox"
+              id="skipPresenter"
+              checked={filterOutPresenter}
+              onChange={() => {
+                setFilterOutPresenter(!filterOutPresenter);
+              }}
+              name="options"
+              value="skipPresenter"
+            />
+            <span className="check-box-label">Skip Presenter</span>
           </label>
         </p>
       </div>
@@ -90,7 +105,7 @@ export function PresenterViewComponent(props: PresenterViewComponentProps) {
               deletionFunction([RESET_DATA_CHANNEL]);
             }}
           >
-            clear
+            Clear All
           </button>
         </div>
         <ul className="moderator-view-list">

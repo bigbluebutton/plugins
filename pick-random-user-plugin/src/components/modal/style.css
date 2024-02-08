@@ -102,6 +102,8 @@ text-transform: capitalize;
 }
 
 .moderator-view-value {
+  display: flex;
+  flex-direction: column;
   font-size: 18px;
   padding-left: 40px;
 }
@@ -148,6 +150,15 @@ text-transform: capitalize;
 .moderator-view-wrapper-title {
   display: flex;
   flex-direction: row;
+  align-items: center;
+}
+
+.check-box-label {
+  margin-left: 5px;
+}
+
+.check-box-label-container {
+  display: flex;
   align-items: center;
 }
 

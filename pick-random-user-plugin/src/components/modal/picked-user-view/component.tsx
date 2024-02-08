@@ -7,11 +7,13 @@ export function PickedUserViewComponent(props: PickedUserViewComponentProps) {
     pickedUser,
     currentUser,
     setShowPresenterView,
+    dispatcherPickedUser,
   } = props;
 
   const handleBackToPresenterView = () => {
     if (currentUser?.presenter) {
       setShowPresenterView(true);
+      dispatcherPickedUser(null);
     }
   };
   return (

@@ -14,10 +14,13 @@ export function PickUserModal(props: PickUserModalProps) {
     pickedUser,
     handlePickRandomUser,
     currentUser,
+    filterOutPresenter,
+    setFilterOutPresenter,
     userFilterViewer,
     setUserFilterViewer,
     dataChannelPickedUsers,
     deletionFunction,
+    dispatcherPickedUser,
   } = props;
 
   let userRole: string;
@@ -68,6 +71,8 @@ export function PickUserModal(props: PickUserModalProps) {
           ? (
             <PresenterViewComponent
               {...{
+                filterOutPresenter,
+                setFilterOutPresenter,
                 userFilterViewer,
                 setUserFilterViewer,
                 deletionFunction,
@@ -76,6 +81,7 @@ export function PickUserModal(props: PickUserModalProps) {
                 pickedUser,
                 users,
                 userRole,
+                dispatcherPickedUser,
               }}
             />
           ) : (
@@ -85,6 +91,7 @@ export function PickUserModal(props: PickUserModalProps) {
                 title,
                 currentUser,
                 setShowPresenterView,
+                dispatcherPickedUser,
               }}
             />
           )

@@ -5,6 +5,7 @@ subscription usersMoreInformation {
     name
     userId
     role
+    presenter
   }
 }
 `;

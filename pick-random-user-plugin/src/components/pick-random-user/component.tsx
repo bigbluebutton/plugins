@@ -13,6 +13,7 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [pickedUser, setPickedUser] = useState<PickedUser | undefined>();
   const [userFilterViewer, setUserFilterViewer] = useState<boolean>(true);
+  const [filterOutPresenter, setFilterOutPresenter] = useState<boolean>(true);
   const pluginApi: PluginApi = BbbPluginSdk.getPluginApi(uuid);
   const currentUserInfo = pluginApi.useCurrentUser();
   const { data: currentUser } = currentUserInfo;
@@ -36,8 +37,11 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
       return roleFilter
           && pickedUserFromDataChannel
             .data?.pluginDataChannelMessage?.findIndex(
-              (u) => u?.payloadJson.userId === user.userId,
+              (u) => u?.payloadJson?.userId === user?.userId,
             ) === -1;
+    }).filter((user) => {
+      if (filterOutPresenter) return !user.presenter;
+      return true;
     }),
   };
 
@@ -51,6 +55,7 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
   };
 
   const handleCloseModal = (): void => {
+    if (currentUser?.presenter) dispatcherPickedUser(null);
     setShowModal(false);
   };
 
@@ -61,15 +66,18 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
         .data?.pluginDataChannelMessage[
           pickedUserFromDataChannel.data.pluginDataChannelMessage.length - 1
         ];
-      setPickedUser(pickedUserToUpdate.payloadJson);
-      setShowModal(true);
+      setPickedUser(pickedUserToUpdate?.payloadJson);
+      if (pickedUserToUpdate?.payloadJson) setShowModal(true);
     } else if (pickedUserFromDataChannel.data
         && pickedUserFromDataChannel.data?.pluginDataChannelMessage?.length === 0) {
-      setPickedUser(undefined);
+      setPickedUser(null);
       if (currentUser && !currentUser.presenter) setShowModal(false);
     }
   }, [pickedUserFromDataChannelResponse]);
 
+  useEffect(() => {
+    if (!pickedUser && !currentUser?.presenter) setShowModal(false);
+  }, [pickedUser]);
   return (
     <>
       <PickUserModal
@@ -80,9 +88,12 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
           pickedUser,
           handlePickRandomUser,
           currentUser,
+          filterOutPresenter,
+          setFilterOutPresenter,
           userFilterViewer,
           setUserFilterViewer,
           dataChannelPickedUsers: pickedUserFromDataChannel.data?.pluginDataChannelMessage,
+          dispatcherPickedUser,
           deletionFunction,
         }}
       />
