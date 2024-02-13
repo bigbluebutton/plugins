@@ -3,4 +3,13 @@ interface DecreaseVolumeOnSpeakProps {
     pluginUuid: string,
 }
 
-export { DecreaseVolumeOnSpeakProps };
+interface ExternalVideoMeetingSubscription {
+    meeting: {
+        externalVideo: {
+            playerPlaying: boolean
+            externalVideoUrl: string
+        }
+    }[]
+}
+
+export { DecreaseVolumeOnSpeakProps, ExternalVideoMeetingSubscription };
