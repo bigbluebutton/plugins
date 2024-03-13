@@ -26,10 +26,12 @@ function GenericLinkShare(
   const [showingPresentationContent, setShowingPresentationContent] = useState(false);
   const { data: currentUser } = pluginApi.useCurrentUser();
   const [link, setLink] = useState<string>(null);
-  const [isUrlSameForRole, setIsUrlSameForRole] = useState(true);
   const [data, dispatcher] = pluginApi.useDataChannel<DataToGenericLink>('urlToGenericLink');
   const [linkError, setLinkError] = useState<string>(null);
-  const [previousModalState, setPreviousModalState] = useState<DataToGenericLink>(null);
+  const [previousModalState, setPreviousModalState] = useState<DataToGenericLink>({
+    isUrlSameForRole: true,
+    url: null,
+  });
 
   const currentLayout = pluginApi.useUiData(LayoutPresentatioAreaUiDataNames.CURRENT_ELEMENT, {
     isOpen: true,
@@ -43,7 +45,11 @@ function GenericLinkShare(
   }, [currentLayout]);
 
   const handleCheckboxChange = () => {
-    setIsUrlSameForRole((value) => !value);
+    setPreviousModalState((p) => ({
+      isUrlSameForRole: !p.isUrlSameForRole,
+      url: p.url,
+      viewerUrl: p.viewerUrl,
+    }));
   };
 
   const handleCloseModal = (): void => {
@@ -65,7 +71,7 @@ function GenericLinkShare(
     e.preventDefault();
     let objectToDispatch: DataToGenericLink;
     const regex = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])/g;
-    if (isUrlSameForRole) {
+    if (previousModalState.isUrlSameForRole) {
       const target = e.target as typeof e.target & {
         link: { value: string };
       };
@@ -89,7 +95,6 @@ function GenericLinkShare(
       }
     }
     if (objectToDispatch) {
-      setPreviousModalState(objectToDispatch);
       dispatcher(objectToDispatch);
       setShowModal(false);
     } else {
@@ -103,6 +108,9 @@ function GenericLinkShare(
       && data
         .data?.pluginDataChannelMessage[data.data.pluginDataChannelMessage.length - 1]?.payloadJson
     ) {
+      setPreviousModalState(data
+        .data?.pluginDataChannelMessage[
+          data.data.pluginDataChannelMessage.length - 1]?.payloadJson);
       const isUrlTheSame = data
         .data?.pluginDataChannelMessage[
           data.data.pluginDataChannelMessage.length - 1
@@ -129,11 +137,13 @@ function GenericLinkShare(
         .data?.pluginDataChannelMessage[data.data.pluginDataChannelMessage.length - 1]?.payloadJson
     ) {
       setLink(null);
-      setPreviousModalState(null);
-      setIsUrlSameForRole(true);
+      setPreviousModalState({
+        isUrlSameForRole: true,
+        url: null,
+      });
       handleChangePresentationAreaContent(false);
     }
-  }, [data]);
+  }, [data, currentUser]);
 
   useEffect(() => {
     if (currentUser?.presenter) {
@@ -201,7 +211,6 @@ function GenericLinkShare(
         handleCloseModal,
         linkError,
         handleSendLinkToIframe,
-        isUrlSameForRole,
         handleCheckboxChange,
         setLinkError,
       }}

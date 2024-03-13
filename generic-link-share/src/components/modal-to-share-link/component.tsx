@@ -12,18 +12,17 @@ export function ModalToShareLink(props: ModalToShareLinkProps) {
     handleCloseModal,
     linkError,
     handleSendLinkToIframe,
-    isUrlSameForRole,
     handleCheckboxChange,
     setLinkError,
   } = props;
 
   const {
-    url = '',
-    viewerUrl = '',
-  } = previousModalState || {
-    url: '',
-    viewerUrl: '',
-  };
+    isUrlSameForRole = true,
+    url: incomingUrl,
+    viewerUrl: incomingViewerUrl,
+  } = previousModalState;
+  const url = incomingUrl || '';
+  const viewerUrl = incomingViewerUrl || '';
   return (
     <ReactModal
       className="plugin-modal"
