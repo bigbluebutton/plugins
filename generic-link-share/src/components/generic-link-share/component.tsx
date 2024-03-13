@@ -165,6 +165,8 @@ function GenericLinkShare(
         },
       }));
       pluginApi.setActionButtonDropdownItems(actionDropdownItemsToRender);
+    } else {
+      pluginApi.setActionButtonDropdownItems([]);
     }
   }, [currentUser, showingPresentationContent]);
 
