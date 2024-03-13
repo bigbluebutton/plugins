@@ -14,14 +14,8 @@ import {
 
 import GenericComponentLinkShare from '../generic-component/component';
 
-import { DecreaseVolumeOnSpeakProps } from './types';
+import { DataToGenericLink, DecreaseVolumeOnSpeakProps } from './types';
 import { ModalToShareLink } from '../modal-to-share-link/component';
-
-interface DataToGenericLink {
-  isUrlSameForRole: boolean;
-  url: string;
-  viewerUrl?: string
-}
 
 function GenericLinkShare(
   { pluginUuid: uuid }: DecreaseVolumeOnSpeakProps,
@@ -35,6 +29,7 @@ function GenericLinkShare(
   const [isUrlSameForRole, setIsUrlSameForRole] = useState(true);
   const [data, dispatcher] = pluginApi.useDataChannel<DataToGenericLink>('urlToGenericLink');
   const [linkError, setLinkError] = useState<string>(null);
+  const [previousModalState, setPreviousModalState] = useState<DataToGenericLink>(null);
 
   const currentLayout = pluginApi.useUiData(LayoutPresentatioAreaUiDataNames.CURRENT_ELEMENT, {
     isOpen: true,
@@ -83,9 +78,9 @@ function GenericLinkShare(
     } else {
       const target = e.target as typeof e.target & {
         link: { value: string };
-        viewerLink: { value: string };
+        viewerLink: { value?: string };
       };
-      if (target.link.value.match(regex) && target.viewerLink.value.match(regex)) {
+      if (target.link.value.match(regex)) {
         objectToDispatch = {
           isUrlSameForRole: false,
           url: target.link.value,
@@ -94,6 +89,7 @@ function GenericLinkShare(
       }
     }
     if (objectToDispatch) {
+      setPreviousModalState(objectToDispatch);
       dispatcher(objectToDispatch);
       setShowModal(false);
     } else {
@@ -112,11 +108,14 @@ function GenericLinkShare(
           data.data.pluginDataChannelMessage.length - 1
         ]?.payloadJson.isUrlSameForRole;
       if (!isUrlTheSame && !currentUser.presenter) {
-        setLink(data
+        const viewerUrl = data
           .data?.pluginDataChannelMessage[
             data.data.pluginDataChannelMessage.length - 1
-          ]?.payloadJson.viewerUrl);
-        handleChangePresentationAreaContent(true);
+          ]?.payloadJson.viewerUrl;
+        if (viewerUrl) {
+          setLink(viewerUrl);
+          handleChangePresentationAreaContent(true);
+        }
       } else {
         setLink(data
           .data?.pluginDataChannelMessage[
@@ -130,32 +129,48 @@ function GenericLinkShare(
         .data?.pluginDataChannelMessage[data.data.pluginDataChannelMessage.length - 1]?.payloadJson
     ) {
       setLink(null);
+      setPreviousModalState(null);
+      setIsUrlSameForRole(true);
       handleChangePresentationAreaContent(false);
     }
   }, [data]);
 
   useEffect(() => {
     if (currentUser?.presenter) {
-      pluginApi.setActionButtonDropdownItems([
+      const actionDropdownItemsToRender = [
         new ActionButtonDropdownSeparator(),
-        new ActionButtonDropdownOption({
-          label: showingPresentationContent ? 'Remove link share' : 'Share link',
+      ];
+      if (showingPresentationContent) {
+        actionDropdownItemsToRender.push(new ActionButtonDropdownOption({
+          label: 'Edit link(s)',
           icon: 'copy',
-          tooltip: 'this is a button injected by plugin',
+          tooltip: 'Edit previously set links',
           allowed: true,
-          onClick: showingPresentationContent ? () => {
-            dispatcher(null);
-            setShowingPresentationContent(false);
-          } : () => {
+          onClick: () => {
             setShowModal(true);
           },
-        }),
-      ]);
+        }));
+      }
+      actionDropdownItemsToRender.push(new ActionButtonDropdownOption({
+        label: showingPresentationContent ? 'Remove link share' : 'Share link',
+        icon: 'copy',
+        tooltip: showingPresentationContent ? 'Remove generic link from presentation area'
+          : 'Share a generic link into the presentation area',
+        allowed: true,
+        onClick: showingPresentationContent ? () => {
+          dispatcher(null);
+          setShowingPresentationContent(false);
+        } : () => {
+          setShowModal(true);
+        },
+      }));
+      pluginApi.setActionButtonDropdownItems(actionDropdownItemsToRender);
     }
   }, [currentUser, showingPresentationContent]);
 
   useEffect(() => {
     if (link && link !== '') {
+      pluginApi.setGenericComponents([]);
       pluginApi.setGenericComponents([
         new GenericComponent({
           contentFunction: (element: HTMLElement) => {
@@ -170,12 +185,16 @@ function GenericLinkShare(
           },
         }),
       ]);
+    } else {
+      pluginApi.setGenericComponents([]);
     }
   }, [link]);
 
   return (
     <ModalToShareLink
       {...{
+        setPreviousModalState,
+        previousModalState,
         showModal,
         handleCloseModal,
         linkError,

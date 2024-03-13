@@ -12,4 +12,10 @@ interface ExternalVideoMeetingSubscription {
     }[]
 }
 
-export { DecreaseVolumeOnSpeakProps, ExternalVideoMeetingSubscription };
+interface DataToGenericLink {
+    isUrlSameForRole: boolean;
+    url: string;
+    viewerUrl?: string
+}
+
+export { DecreaseVolumeOnSpeakProps, ExternalVideoMeetingSubscription, DataToGenericLink };

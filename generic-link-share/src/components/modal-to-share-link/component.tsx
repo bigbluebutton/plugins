@@ -6,6 +6,8 @@ import { ModalToShareLinkProps } from './types';
 
 export function ModalToShareLink(props: ModalToShareLinkProps) {
   const {
+    previousModalState,
+    setPreviousModalState,
     showModal,
     handleCloseModal,
     linkError,
@@ -15,6 +17,13 @@ export function ModalToShareLink(props: ModalToShareLinkProps) {
     setLinkError,
   } = props;
 
+  const {
+    url = '',
+    viewerUrl = '',
+  } = previousModalState || {
+    url: '',
+    viewerUrl: '',
+  };
   return (
     <ReactModal
       className="plugin-modal"
@@ -65,7 +74,21 @@ export function ModalToShareLink(props: ModalToShareLinkProps) {
                     className="form-to-send-url-item"
                   >
                     <span className="label-form">{isUrlSameForRole ? 'URL: ' : 'Presenter Url: '}</span>
-                    <input className="label-form-text-input" id="link-receiver" type="text" name="link" placeholder="link" />
+                    <input
+                      className="label-form-text-input"
+                      id="link-receiver"
+                      value={url}
+                      type="text"
+                      name="link"
+                      placeholder="https://..."
+                      onChange={(e) => {
+                        setPreviousModalState((p) => ({
+                          isUrlSameForRole: p?.isUrlSameForRole,
+                          url: e?.target?.value,
+                          viewerUrl: p?.viewerUrl,
+                        }));
+                      }}
+                    />
                   </label>
                   {
                     !isUrlSameForRole
@@ -74,8 +97,22 @@ export function ModalToShareLink(props: ModalToShareLinkProps) {
                           htmlFor="extra-link-receiver"
                           className="form-to-send-url-item"
                         >
-                          <span className="label-form">Viewer URL: </span>
-                          <input className="label-form-text-input" id="extra-link-receiver" type="text" name="viewerLink" placeholder="link" />
+                          <span className="label-form">Viewer URL (It can be set later on): </span>
+                          <input
+                            className="label-form-text-input"
+                            id="extra-link-receiver"
+                            value={viewerUrl}
+                            type="text"
+                            name="viewerLink"
+                            placeholder="https://..."
+                            onChange={(e) => {
+                              setPreviousModalState((p) => ({
+                                isUrlSameForRole: p?.isUrlSameForRole,
+                                url: p?.url,
+                                viewerUrl: e?.target?.value,
+                              }));
+                            }}
+                          />
                         </label>
                       ) : null
                   }
