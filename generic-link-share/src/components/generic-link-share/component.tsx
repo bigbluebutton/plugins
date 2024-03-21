@@ -32,16 +32,21 @@ function GenericLinkShare(
     isUrlSameForRole: true,
     url: null,
   });
+  const [genericComponentId, setGenericComponentId] = useState<string>('');
 
-  const currentLayout = pluginApi.useUiData(LayoutPresentatioAreaUiDataNames.CURRENT_ELEMENT, {
+  const currentLayout = pluginApi.useUiData(LayoutPresentatioAreaUiDataNames.CURRENT_ELEMENT, [{
     isOpen: true,
-    currentElement: UiLayouts.ONLY_PRESENTATION,
-  });
+    currentElement: UiLayouts.WHITEBOARD,
+  }]);
 
   useEffect(() => {
-    if (currentLayout?.currentElement !== UiLayouts.GENERIC_COMPONENT) {
-      setShowingPresentationContent(false);
-    } else setShowingPresentationContent(true);
+    const isGenericComponentInPile = currentLayout.some((gc) => (
+      gc.currentElement === UiLayouts.GENERIC_COMPONENT
+      && gc.genericComponentId === genericComponentId
+    ));
+    if (isGenericComponentInPile) {
+      setShowingPresentationContent(true);
+    } else setShowingPresentationContent(false);
   }, [currentLayout]);
 
   const handleCheckboxChange = () => {
@@ -183,7 +188,7 @@ function GenericLinkShare(
   useEffect(() => {
     if (link && link !== '') {
       pluginApi.setGenericComponents([]);
-      pluginApi.setGenericComponents([
+      setGenericComponentId(pluginApi.setGenericComponents([
         new GenericComponent({
           contentFunction: (element: HTMLElement) => {
             const root = ReactDOM.createRoot(element);
@@ -196,7 +201,7 @@ function GenericLinkShare(
             );
           },
         }),
-      ]);
+      ])[0]);
     } else {
       pluginApi.setGenericComponents([]);
     }
