@@ -24,23 +24,23 @@ export function PickedUserViewComponent(props: PickedUserViewComponentProps) {
     >
       <h1 className="title">{title}</h1>
       {
-                (pickedUser) ? (
-                  <>
-                    <div
-                      className="modal-avatar"
-                      style={{ backgroundColor: `${pickedUser?.color}` }}
-                    >
-                      {pickedUser?.name.slice(0, 2)}
-                    </div>
-                    <p className="user-name">{pickedUser?.name}</p>
-                  </>
-                ) : null
-            }
+        (pickedUser) ? (
+          <>
+            <div
+              className="modal-avatar"
+              style={{ backgroundColor: `${pickedUser?.color}` }}
+            >
+              {pickedUser?.name.slice(0, 2)}
+            </div>
+            <p className="user-name">{pickedUser?.name}</p>
+          </>
+        ) : null
+      }
       {
-                (currentUser?.presenter) ? (
-                  <button type="button" onClick={handleBackToPresenterView}>back</button>
-                ) : null
-            }
+        (currentUser?.presenter) ? (
+          <button type="button" onClick={handleBackToPresenterView}>back</button>
+        ) : null
+      }
     </div>
   );
 }

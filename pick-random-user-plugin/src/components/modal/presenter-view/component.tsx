@@ -110,32 +110,33 @@ export function PresenterViewComponent(props: PresenterViewComponentProps) {
         </div>
         <ul className="moderator-view-list">
           {
-                    makeVerticalListOfNames(dataChannelPickedUsers)
-                }
+            makeVerticalListOfNames(dataChannelPickedUsers)
+          }
         </ul>
       </div>
       {
-                users?.length > 0 ? (
-                  <button
-                    type="button"
-                    className="button-style"
-                    onClick={() => {
-                      handlePickRandomUser();
-                    }}
-                  >
-                    {
-                    (pickedUser) ? 'Pick again' : `Pick ${userRole}`
-                    }
-                  </button>
-                ) : (
-                  <p>
-                    No
-                    {userRole}
-                    {' '}
-                    available to randomly pick from
-                  </p>
-                )
+        users?.length > 0 ? (
+          <button
+            type="button"
+            className="button-style"
+            onClick={() => {
+              handlePickRandomUser();
+            }}
+          >
+            {
+            (pickedUser) ? 'Pick again' : `Pick ${userRole}`
             }
+          </button>
+        ) : (
+          <p>
+            No
+            {' '}
+            {userRole}
+            {' '}
+            available to randomly pick from
+          </p>
+        )
+      }
     </div>
   );
 }

@@ -15,6 +15,11 @@ export interface UsersMoreInformationGraphqlResponse {
     user: PickedUser[];
 }
 
+export interface ModalInformationFromPresenter {
+    skipModerators: boolean;
+    skipPresenter: boolean;
+}
+
 export interface DataChannelArrayMessages <T> {
     createdAt: string;
     dataChannel: string;

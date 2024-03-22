@@ -1,8 +1,13 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 
-import { BbbPluginSdk, PluginApi } from 'bigbluebutton-html-plugin-sdk';
-import { PickRandomUserPluginProps, PickedUser, UsersMoreInformationGraphqlResponse } from './types';
+import { BbbPluginSdk, PluginApi, RESET_DATA_CHANNEL } from 'bigbluebutton-html-plugin-sdk';
+import {
+  ModalInformationFromPresenter,
+  PickRandomUserPluginProps,
+  PickedUser,
+  UsersMoreInformationGraphqlResponse,
+} from './types';
 import { USERS_MORE_INFORMATION } from './queries';
 import { PickUserModal } from '../modal/component';
 import { Role } from './enums';
@@ -22,6 +27,7 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
   const { data: allUsers } = allUsersInfo;
 
   const [pickedUserFromDataChannelResponse, dispatcherPickedUser, deletionFunction] = pluginApi.useDataChannel<PickedUser>('pickRandomUser');
+  const [modalInformationFromPresenter, dispatchModalInformationFromPresenter, deleteModalInformationForPresenter] = pluginApi.useDataChannel<ModalInformationFromPresenter>('modalInformationFromPresenter');
 
   const pickedUserFromDataChannel = {
     data: {
@@ -29,6 +35,15 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
     },
     loading: false,
   };
+
+  useEffect(() => {
+    const modalInformation = modalInformationFromPresenter
+      .data?.pluginDataChannelMessage[0]?.payloadJson;
+    if (modalInformation) {
+      setFilterOutPresenter(modalInformation.skipPresenter);
+      setUserFilterViewer(modalInformation.skipModerators);
+    }
+  }, [modalInformationFromPresenter]);
 
   const usersToBePicked: UsersMoreInformationGraphqlResponse = {
     user: allUsers?.user.filter((user) => {
@@ -55,6 +70,11 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
   };
 
   const handleCloseModal = (): void => {
+    deleteModalInformationForPresenter([RESET_DATA_CHANNEL]);
+    dispatchModalInformationFromPresenter<ModalInformationFromPresenter>({
+      skipModerators: userFilterViewer,
+      skipPresenter: filterOutPresenter,
+    });
     if (currentUser?.presenter) dispatcherPickedUser(null);
     setShowModal(false);
   };
@@ -78,6 +98,10 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
   useEffect(() => {
     if (!pickedUser && !currentUser?.presenter) setShowModal(false);
   }, [pickedUser]);
+
+  useEffect(() => {
+    if (!currentUser?.presenter && dispatchModalInformationFromPresenter) handleCloseModal();
+  }, [currentUser]);
   return (
     <>
       <PickUserModal
@@ -99,6 +123,7 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
       />
       <ActionButtonDropdownManager
         {...{
+          pickedUser,
           currentUser,
           pluginApi,
           setShowModal,

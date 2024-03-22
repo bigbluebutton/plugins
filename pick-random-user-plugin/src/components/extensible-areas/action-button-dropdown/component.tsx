@@ -6,6 +6,7 @@ import { ActionButtonDropdownManagerProps } from './types';
 
 function ActionButtonDropdownManager(props: ActionButtonDropdownManagerProps): React.ReactNode {
   const {
+    pickedUser,
     currentUser,
     pluginApi,
     setShowModal,
@@ -26,10 +27,23 @@ function ActionButtonDropdownManager(props: ActionButtonDropdownManagerProps): R
           },
         }),
       ]);
+    } else if (!currentUser?.presenter && pickedUser) {
+      pluginApi.setActionButtonDropdownItems([
+        new ActionButtonDropdownSeparator(),
+        new ActionButtonDropdownOption({
+          label: 'Display last randomly picked user',
+          icon: 'user',
+          tooltip: '',
+          allowed: true,
+          onClick: () => {
+            setShowModal(true);
+          },
+        }),
+      ]);
     } else {
       pluginApi.setActionButtonDropdownItems([]);
     }
-  }, [currentUserInfo]);
+  }, [currentUserInfo, pickedUser]);
   return null;
 }
 

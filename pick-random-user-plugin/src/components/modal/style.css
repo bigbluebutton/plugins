@@ -1,6 +1,6 @@
 .plugin-modal {
   position: relative;
-  z-index: 1000 !important;
+  z-index: 900 !important;
 
   outline: transparent;
   outline-width: 2px;
@@ -59,7 +59,7 @@
 }
 
 .modal-overlay {
-  z-index: 1000;
+  z-index: 900;
   display: flex;
   align-items: center;
   justify-content: center;

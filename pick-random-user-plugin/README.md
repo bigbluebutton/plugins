@@ -26,6 +26,9 @@ npm start
         - name: pickRandomUser
           writePermission: ['moderator','presenter']
           deletePermission: ['moderator', 'sender']
+        - name: modalInformationFromPresenter
+          writePermission: ['moderator','presenter']
+          deletePermission: ['moderator', 'sender']
 ```
 
 ## Building the Plugin
