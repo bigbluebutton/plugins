@@ -37,7 +37,7 @@ To build the plugin for production use, follow these steps:
 
 ```bash
 cd $HOME/src/plugins/pick-random-user-plugin
-npm install
+npm ci
 npm run build-bundle
 ```
 
