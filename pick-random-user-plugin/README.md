@@ -24,10 +24,10 @@ npm start
       url: http://127.0.0.1:4701/static/PickRandomUserPlugin.js
       dataChannels:
         - name: pickRandomUser
-          writePermission: ['moderator','presenter']
+          writePermission: ['presenter']
           deletePermission: ['moderator', 'sender']
         - name: modalInformationFromPresenter
-          writePermission: ['moderator','presenter']
+          writePermission: ['presenter']
           deletePermission: ['moderator', 'sender']
 ```
 
@@ -54,7 +54,10 @@ public:
       url: <<PLUGIN_URL>>
         dataChannels:
         - name: pickRandomUser
-          writePermission: ['moderator','presenter']
+          writePermission: ['presenter']
+          deletePermission: ['moderator', 'sender']
+        - name: modalInformationFromPresenter
+          writePermission: ['presenter']
           deletePermission: ['moderator', 'sender']
   ... // All other configurations
 ```

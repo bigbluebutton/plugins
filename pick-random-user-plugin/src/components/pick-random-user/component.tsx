@@ -31,7 +31,8 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
 
   const pickedUserFromDataChannel = {
     data: {
-      pluginDataChannelMessage: pickedUserFromDataChannelResponse?.data?.pluginDataChannelMessage,
+      pluginDataChannelMessage:
+        pickedUserFromDataChannelResponse?.data?.pluginDataChannelMessage,
     },
     loading: false,
   };
@@ -51,11 +52,13 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
     user: allUsers?.user.filter((user) => {
       let roleFilter = true;
       if (userFilterViewer) roleFilter = user.role === Role.VIEWER;
-      return roleFilter
-          && pickedUserFromDataChannel
-            .data?.pluginDataChannelMessage?.findIndex(
-              (u) => u?.payloadJson?.userId === user?.userId,
-            ) === -1;
+      if (pickedUserFromDataChannel.data.pluginDataChannelMessage) {
+        return roleFilter && pickedUserFromDataChannel
+          .data.pluginDataChannelMessage.findIndex(
+            (u) => u?.payloadJson?.userId === user?.userId,
+          ) === -1;
+      }
+      return roleFilter;
     }).filter((user) => {
       if (filterOutPresenter) return !user.presenter;
       return true;
@@ -72,11 +75,13 @@ function PickRandomUserPlugin({ pluginUuid: uuid }: PickRandomUserPluginProps) {
   };
 
   const handleCloseModal = (): void => {
-    dispatchModalInformationFromPresenter<ModalInformationFromPresenter>({
-      skipModerators: userFilterViewer,
-      skipPresenter: filterOutPresenter,
-    });
-    if (currentUser?.presenter) dispatcherPickedUser(null);
+    if (currentUser?.presenter) {
+      dispatchModalInformationFromPresenter<ModalInformationFromPresenter>({
+        skipModerators: userFilterViewer,
+        skipPresenter: filterOutPresenter,
+      });
+      dispatcherPickedUser(null);
+    }
     setShowModal(false);
   };
 
