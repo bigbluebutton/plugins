@@ -1,0 +1,13 @@
+  code{
+    border-radius: 25px;
+    padding-top: 20px;
+    font-weight: 400;
+  }
+
+  code span {
+    font-style: normal !important;
+  }
+
+  span {
+    font-style: normal;
+  }
