@@ -9,6 +9,17 @@ This plugin allows the user to share the current session in two ways:
 
 ![Gif of plugin demo](./public/assets/plugin.gif)
 
+## Obtaining plugin from CDN
+
+1. Add reference to it on BigBlueButton's `settings.yml`:
+
+```yaml
+  plugins:
+    - name: SessionSharePlugin
+      url: https://bigbluebutton.nyc3.digitaloceanspaces.com/plugins/bbb-summit-19/SessionSharePlugin.js
+```
+
+
 ## Running the Plugin from Source
 
 1. Start the development server:
