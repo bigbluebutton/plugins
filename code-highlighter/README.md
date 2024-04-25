@@ -1,17 +1,26 @@
-# Sample Dom Item Manipulation Plugin
+# Code Highlighter Plugin
 
 ## What is it?
 
-The Sample Dom Item Manipulation Plugin serves as a demonstration of how developers can create their own custom plugins. This plugin basically implements the "mention" feature as you can see down below.
+The Code Highlighter Plugin serves as a chat tool for studenteds and users to demonstrate and compreehend code blocks in simpler, more visual ways.
 
 ![Gif of plugin demo](./public/assets/plugin.gif)
+
+## Obtaining plugin from CDN
+
+1. Add reference to it on BigBlueButton's `settings.yml`:
+
+```yaml
+  plugins:
+    - name: CodeHighlighter
+      url: https://bigbluebutton.nyc3.digitaloceanspaces.com/plugins/bbb30/CodeHighlighter.js
+```
 
 ## Running the Plugin from Source
 
 1. Start the development server:
 
 ```bash
-cd $HOME/src/bigbluebutton-html-plugin-sdk/samples/code-highlighter
 npm install
 npm start
 ```
@@ -23,29 +32,3 @@ npm start
     - name: CodeHighlighter
       url: http://127.0.0.1:4701/static/CodeHighlighter.js
 ```
-
-## Building the Plugin
-
-To build the plugin for production use, follow these steps:
-
-```bash
-cd $HOME/src/bigbluebutton-html-plugin-sdk/samples/code-highlighter
-npm install
-npm run build-bundle
-```
-
-The above command will generate the `dist` folder, containing the bundled JavaScript file named `CodeHighlighter.js`. This file can be hosted on any HTTPS server.
-
-To use the plugin with BigBlueButton, add the plugin's URL to `settings.yml` as shown below:
-
-```yaml
-public:
-  app:
-    ... // All app configurations
-  plugins:
-    - name: CodeHighlighter
-      url: <<PLUGIN_URL>>
-  ... // All other configurations
-```
-
-Alternatively, you can host the bundled file on the BigBlueButton server by copying `dist/CodeHighlighter.js` to the folder `/var/www/bigbluebutton-default/assets/plugins`. In this case, the `<<PLUGIN_URL>>` will be `https://<your-host>/plugins/CodeHighlighter.js`.

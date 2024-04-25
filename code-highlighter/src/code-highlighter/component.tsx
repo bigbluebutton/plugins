@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { BbbPluginSdk, PluginApi } from 'bigbluebutton-html-plugin-sdk';
+import hljs from 'highlight.js';
 import { CodeHighlighterProps } from './types';
 import './styles.css';
-import hljs from 'highlight.js';
 import 'highlight.js/styles/night-owl.css';
 
 const CODE_BLOCK_REGEX = /```\w+[\r\n\s]+([\s\S]*?)\n```/;
@@ -19,17 +19,18 @@ function CodeHighlighter({ pluginUuid: uuid }: CodeHighlighterProps): React.Reac
   BbbPluginSdk.initialize(uuid);
   const pluginApi: PluginApi = BbbPluginSdk.getPluginApi(uuid);
 
-  const [chatMessagesToApplyHighlights, setChatIdsToApplyHighlights] = useState<MessageIdAndCodeLanguage[]>([]);
+  const [
+    chatMessagesToApplyHighlights,
+    setChatIdsToApplyHighlights,
+  ] = useState<MessageIdAndCodeLanguage[]>([]);
   const alreadyHighlightedMessages = React.useRef<string[]>([]);
   const response = pluginApi.useLoadedChatMessages();
 
   useEffect(() => {
     if (response.data) {
       const messagesToHighlight = response.data.filter(
-        (message) => {
-          return message.message.search(CODE_BLOCK_REGEX) !== -1
-            && !alreadyHighlightedMessages.current.includes(message.messageId);
-        }
+        (message) => message.message.search(CODE_BLOCK_REGEX) !== -1
+            && !alreadyHighlightedMessages.current.includes(message.messageId),
       ).map((message) => {
         const codeLanguageIndex = message.message.search(CODE_LANGUAGE_REGEX);
         let codeLanguage = '';
@@ -41,16 +42,16 @@ function CodeHighlighter({ pluginUuid: uuid }: CodeHighlighterProps): React.Reac
           messageId: message.messageId,
           codeLanguage,
           messageText: message.message,
-        }
+        };
       });
       setChatIdsToApplyHighlights(messagesToHighlight);
     }
-  }, [response])
+  }, [response]);
 
   useEffect(() => {
     alreadyHighlightedMessages.current = alreadyHighlightedMessages.current
       .concat(chatMessagesToApplyHighlights.map((message) => message.messageId));
-  }, [chatMessagesToApplyHighlights])
+  }, [chatMessagesToApplyHighlights]);
 
   const chatMessagesDomElements = pluginApi.useChatMessageDomElements(chatMessagesToApplyHighlights
     .map((message) => message.messageId));
@@ -72,11 +73,12 @@ function CodeHighlighter({ pluginUuid: uuid }: CodeHighlighterProps): React.Reac
         const highlightedCode = hljs
           .highlight(messageFromGraphql.codeLanguage, pureTextCode).value;
         code.innerHTML = highlightedCode;
-        pre.appendChild(code)
+        pre.appendChild(code);
         codeTagItem.replaceWith(pre);
       });
-    })
-  }, [response])
+      return true;
+    });
+  }, [response]);
   return null;
 }
 
