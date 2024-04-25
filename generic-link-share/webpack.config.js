@@ -9,7 +9,7 @@ module.exports = {
   },
   devServer: {
     allowedHosts: 'all',
-    port: 4701,
+    port: 4702,
     host: 'localhost',
     hot: false,
     liveReload: false,

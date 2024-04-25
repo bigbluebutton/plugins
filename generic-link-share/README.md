@@ -2,7 +2,7 @@
 
 ## What is it?
 
-This plugin is one of the official bbb plugins. It basically opens up a link that the presenter wants. So that might be a video, a document, or anything that supports being renderd in an iFrame. 
+This plugin is one of the official bbb plugins. It basically opens up a link that the presenter wants. So that might be a video, a document, or anything that supports being renderd in an iFrame.
 
 ## Running the Plugin from Source
 

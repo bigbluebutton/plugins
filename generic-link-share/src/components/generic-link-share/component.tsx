@@ -6,7 +6,6 @@ import {
   ActionButtonDropdownSeparator,
   BbbPluginSdk,
   GenericComponent,
-  LayoutComponentListEnum,
   PluginApi,
   LayoutPresentatioAreaUiDataNames,
   UiLayouts,
@@ -64,10 +63,8 @@ function GenericLinkShare(
 
   const handleChangePresentationAreaContent = (changeToShare: boolean) => {
     if (!changeToShare) {
-      pluginApi.uiCommands.layout.unset(LayoutComponentListEnum.GENERIC_COMPONENT);
       setShowingPresentationContent(false);
     } else {
-      pluginApi.uiCommands.layout.set(LayoutComponentListEnum.GENERIC_COMPONENT);
       setShowingPresentationContent(true);
     }
   };
@@ -109,21 +106,21 @@ function GenericLinkShare(
 
   useEffect(() => {
     if (
-      data.data?.pluginDataChannelMessage
+      data.data
       && data
-        .data?.pluginDataChannelMessage[data.data.pluginDataChannelMessage.length - 1]?.payloadJson
+        .data[data.data.length - 1]?.payloadJson
     ) {
       setPreviousModalState(data
-        .data?.pluginDataChannelMessage[
-          data.data.pluginDataChannelMessage.length - 1]?.payloadJson);
+        .data[
+          data.data.length - 1]?.payloadJson);
       const isUrlTheSame = data
-        .data?.pluginDataChannelMessage[
-          data.data.pluginDataChannelMessage.length - 1
+        .data[
+          data.data.length - 1
         ]?.payloadJson.isUrlSameForRole;
       if (!isUrlTheSame && !currentUser.presenter) {
         const viewerUrl = data
-          .data?.pluginDataChannelMessage[
-            data.data.pluginDataChannelMessage.length - 1
+          .data[
+            data.data.length - 1
           ]?.payloadJson.viewerUrl;
         if (viewerUrl) {
           setLink(viewerUrl);
@@ -131,15 +128,15 @@ function GenericLinkShare(
         }
       } else {
         setLink(data
-          .data?.pluginDataChannelMessage[
-            data.data.pluginDataChannelMessage.length - 1
+          .data[
+            data.data.length - 1
           ]?.payloadJson.url);
         handleChangePresentationAreaContent(true);
       }
     } else if (
-      data.data?.pluginDataChannelMessage
+      data.data
       && !data
-        .data?.pluginDataChannelMessage[data.data.pluginDataChannelMessage.length - 1]?.payloadJson
+        .data[data.data.length - 1]?.payloadJson
     ) {
       setLink(null);
       setPreviousModalState({
