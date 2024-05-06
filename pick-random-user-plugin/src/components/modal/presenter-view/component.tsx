@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { RESET_DATA_CHANNEL } from 'bigbluebutton-html-plugin-sdk';
+import { DataChannelEntryResponseType } from 'bigbluebutton-html-plugin-sdk/dist/cjs/data-channel/types';
 
-import { DataChannelArrayMessages, PickedUser } from '../../pick-random-user/types';
+import { PickedUser } from '../../pick-random-user/types';
 import { PresenterViewComponentProps } from './types';
 
 const MAX_NAMES_TO_SHOW = 3;
@@ -17,7 +18,7 @@ const makeHorizontalListOfNames = (list?: PickedUser[]) => {
 };
 
 const makeVerticalListOfNames = (
-  list?: DataChannelArrayMessages<PickedUser>[],
+  list?: DataChannelEntryResponseType<PickedUser>[],
 ) => list?.filter((u) => !!u.payloadJson).map((u) => {
   const time = new Date(u.createdAt);
   return (

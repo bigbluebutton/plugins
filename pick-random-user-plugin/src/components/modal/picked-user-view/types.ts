@@ -1,5 +1,5 @@
 import { CurrentUserData } from 'bigbluebutton-html-plugin-sdk';
-import { DispatcherFunction } from 'bigbluebutton-html-plugin-sdk/dist/cjs/data-channel/types';
+import { PushEntryFunction } from 'bigbluebutton-html-plugin-sdk/dist/cjs/data-channel/types';
 import { PickedUser } from '../../pick-random-user/types';
 
 export interface PickedUserViewComponentProps {
@@ -7,5 +7,5 @@ export interface PickedUserViewComponentProps {
     pickedUser: PickedUser;
     currentUser: CurrentUserData;
     setShowPresenterView: React.Dispatch<React.SetStateAction<boolean>>;
-    dispatcherPickedUser: DispatcherFunction
+    dispatcherPickedUser: PushEntryFunction
 }
