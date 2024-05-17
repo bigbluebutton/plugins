@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { WindowWithSettings } from '../../common/types';
+import { WindowWithSettings } from '../../../common/types';
 import { Locale } from '../../types';
 
 const DEFAULT_VALUE = 'select';
@@ -22,6 +22,8 @@ function LocalesDropdown(props: LocalesDropdownProps) {
   } = props;
   const defaultLocale = value || DEFAULT_VALUE;
 
+  const [availableLocales, setAvailableLocales] = React.useState([]);
+
   const filterLocaleVariations = (localeValue: string) => {
     if (allLocales) {
       if (window.meetingClientSettings.public.app.showAllAvailableLocales) {
@@ -40,7 +42,9 @@ function LocalesDropdown(props: LocalesDropdownProps) {
     }
     return [];
   };
-  const availableLocales = filterLocaleVariations(value);
+  React.useEffect(() => {
+    setAvailableLocales(filterLocaleVariations(value));
+  }, [allLocales]);
   return (
     <select
       id={elementId}

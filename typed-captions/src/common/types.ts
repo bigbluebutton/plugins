@@ -3,6 +3,10 @@ export interface CaptionMessage {
   locale: string;
 }
 
+export interface CaptionMenu {
+  captionLocale: string;
+}
+
 export interface sidekickMenuLocale {
   locale: string;
 }

@@ -1,12 +1,8 @@
 import { PluginApi, PushEntryFunction } from 'bigbluebutton-html-plugin-sdk';
 import * as React from 'react';
 
-// import 'react-chat-elements/dist/main.css';
-
-// import { ChatItem, MessageBox, Input } from 'react-chat-elements';
-
 import Styled from './styles';
-import { CaptionMessage } from '../../common/types';
+import { CaptionMessage } from '../../../common/types';
 
 interface GenericComponentExampleProps {
   pushCaptionMessages: PushEntryFunction<CaptionMessage>;

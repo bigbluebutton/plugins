@@ -1,6 +1,6 @@
 import { DataChannelEntryResponseType } from 'bigbluebutton-html-plugin-sdk/dist/cjs/data-channel/types';
 import * as React from 'react';
-import { CaptionMessage } from '../../common/types';
+import { CaptionMessage } from '../../../common/types';
 import Styled from './styles';
 
 interface CaptionMessagesListProps {

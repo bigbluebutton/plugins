@@ -3,9 +3,4 @@ interface Locale {
   name: string;
 }
 
-export interface PanelState {
-  isPanelOpen: boolean;
-  lastSetByGenericComponent: boolean;
-}
-
 export { Locale };

@@ -1,25 +1,21 @@
 import * as BbbPluginSdk from 'bigbluebutton-html-plugin-sdk';
 import * as React from 'react';
-import * as ReactDOM from 'react-dom/client';
 import { getSpeechVoices } from './service';
 import Styled from './styles';
-import { Locale, PanelState } from '../types';
+import { Locale } from '../types';
 import LocalesDropdown from './locales-dropdown/component';
-import { TypedCaptionsSidekickContent } from '../typed-captions-sidekick-content/component';
 import './styles.css';
 import { AVAILABLE_LOCALES } from './constants';
+import { CaptionMenu } from '../../common/types';
 
 interface TypedCaptionsModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
   setIsOpen: (value: boolean) => void;
-  uuid: string;
-  sidekickMenuMounted: boolean;
-  pluginApi: BbbPluginSdk.PluginApi;
-  setSidekickMenuMounted: (value: boolean) => void,
-  panelState: PanelState;
-  setPanelState: (value: PanelState) => void;
-  currentUserRole: string;
+  availableCaptionMenus: BbbPluginSdk.DataChannelEntryResponseType<CaptionMenu>[];
+  pushCaptionMenu: BbbPluginSdk.PushEntryFunction<CaptionMenu>;
+  captionLocale: string;
+  setCaptionLocale: (value: string) => void;
 }
 
 const TIMEOUT_RENDER_ERROR = 3000;
@@ -33,40 +29,45 @@ function TypedCaptionsModal(props: TypedCaptionsModalProps) {
   const {
     isOpen,
     onRequestClose,
-    setSidekickMenuMounted,
-    sidekickMenuMounted,
     setIsOpen,
-    uuid,
-    pluginApi,
-    panelState,
-    setPanelState,
-    currentUserRole,
+    availableCaptionMenus,
+    pushCaptionMenu,
+    captionLocale: locale,
+    setCaptionLocale: setLocale,
   } = props;
 
   const [availableLocales, setAvailableLocales] = React.useState<Locale[]>([]);
-  const [error, setError] = React.useState('');
+  const [errorMessage, setErrorMessage] = React.useState('');
 
   React.useEffect(() => {
     const speechVoices = getSpeechVoices();
     setAvailableLocales(AVAILABLE_LOCALES.filter(
-      (locale: Locale) => speechVoices.includes(locale?.locale),
+      (availableLocale: Locale) => speechVoices.includes(availableLocale?.locale),
     ));
     return () => {
       setIsOpen(false);
       setAvailableLocales([]);
     };
   }, []);
-  const [locale, setLocale] = React.useState('');
+
+  const setError = (message: string) => {
+    setErrorMessage(message);
+    setTimeout(() => {
+      setErrorMessage('');
+    }, TIMEOUT_RENDER_ERROR);
+  };
 
   const handleStart: React.MouseEventHandler<HTMLButtonElement> = () => {
-    if (locale !== '') {
-      setSidekickMenuMounted(true);
+    const alreadyUsedEntryId = availableCaptionMenus?.filter(
+      (item) => item.payloadJson.captionLocale === locale,
+    )[0]?.entryId;
+    if (locale !== '' || !alreadyUsedEntryId) {
+      pushCaptionMenu({ captionLocale: locale });
       setIsOpen(false);
-    } else {
+    } else if (locale === '') {
       setError('Please select a language!');
-      setTimeout(() => {
-        setError('');
-      }, TIMEOUT_RENDER_ERROR);
+    } else if (alreadyUsedEntryId) {
+      setError('This language is already in the typed-captions menu');
     }
   };
 
@@ -77,34 +78,6 @@ function TypedCaptionsModal(props: TypedCaptionsModalProps) {
   const handleChange: React.EventHandler<React.ChangeEvent<HTMLSelectElement>> = (event) => {
     setLocale(event.target.value);
   };
-
-  React.useEffect(() => {
-    if (sidekickMenuMounted && currentUserRole === 'MODERATOR') {
-      if (!panelState.isPanelOpen) pluginApi.setGenericComponents([]);
-      if (!(panelState.isPanelOpen && panelState.lastSetByGenericComponent)) {
-        pluginApi.setGenericComponents([
-          new BbbPluginSdk.GenericComponentSidekickContent({
-            menuItemContentMessage: `Transcription ${locale}`,
-            menuItemIcon: 'closed_caption',
-            menuItemTitle: 'Captions',
-            open: panelState.isPanelOpen,
-            contentFunction: (element: HTMLElement) => {
-              const root = ReactDOM.createRoot(element);
-              root.render(
-                <React.StrictMode>
-                  <TypedCaptionsSidekickContent
-                    captionLocale={locale}
-                    setIsPanelOpen={setPanelState}
-                    uuid={uuid}
-                  />
-                </React.StrictMode>,
-              );
-            },
-          }),
-        ]);
-      }
-    }
-  }, [panelState, sidekickMenuMounted]);
 
   return (
     <Styled.TypedCaptionsModal
@@ -143,14 +116,14 @@ function TypedCaptionsModal(props: TypedCaptionsModalProps) {
             selectMessage={intlMessages.select}
           />
         </Styled.WriterMenuSelect>
-        {error ?? (
+        {errorMessage ?? (
           <Styled.ErrorLabel>
-            {error}
+            {errorMessage}
           </Styled.ErrorLabel>
         )}
         <Styled.StartBtn
           type="button"
-          onClick={handleStart}
+          onClick={(e) => { handleStart(e); }}
         >
           {intlMessages.start}
         </Styled.StartBtn>

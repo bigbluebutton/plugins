@@ -1,4 +1,4 @@
-import { WindowWithSettings } from '../common/types';
+import { WindowWithSettings } from '../../common/types';
 
 declare const window: WindowWithSettings;
 
