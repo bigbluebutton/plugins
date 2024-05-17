@@ -4,6 +4,10 @@
 
 This plugin is one of the official bbb plugins. It implements the previous typed captions feature that was present in the core of BBB, but as a plugin and with some different UI and features within. So the idea is that you can simply type the captions in the sidekick panel that will appear and it will appear just like a normal automatic-captions on the bottom of the presentation area.
 
+See demo below:
+
+![Gif of plugin demo](./public/assets/plugin_demo.gif)
+
 ## Running the Plugin from Source
 
 1. Start the development server:
@@ -21,7 +25,7 @@ npm start
     - name: TypedCaptions
       url: http://127.0.0.1:4701/static/TypedCaptions.js
       dataChannels:
-        - name: typed-captions
+        - name: typed-captions-data-channel
           writePermission: ['moderator','presenter']
           deletePermission:
               - moderator
@@ -60,10 +64,9 @@ public:
 
 Alternatively, you can host the bundled file on the BigBlueButton server by copying `dist/TypedCaptions.js` to the folder `/var/www/bigbluebutton-default/assets/plugins`. In this case, the `<<PLUGIN_URL>>` will be `https://<your-host>/plugins/TypedCaptions.js`.
 
-
 ## More
 
-### Extra settings: 
+### Extra settings:
 
 Pay attention that the audio captions must be enabled, to do that, you open `/etc/bigbluebutton/bbb-html5.yml` and add the yaml directive `public.app.audioCaptions.enabled=true`, just like the following:
 
@@ -75,4 +78,4 @@ public:
       enabled: true
 ```
 
-Make sure you don't change any other setting, save the file, and we're good to go! 
+Make sure you don't change any other setting, save the file, and we're good to go!
