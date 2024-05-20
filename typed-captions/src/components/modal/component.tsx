@@ -61,7 +61,7 @@ function TypedCaptionsModal(props: TypedCaptionsModalProps) {
     const alreadyUsedEntryId = availableCaptionMenus?.filter(
       (item) => item.payloadJson.captionLocale === locale,
     )[0]?.entryId;
-    if (locale !== '' || !alreadyUsedEntryId) {
+    if (locale !== '' && !alreadyUsedEntryId) {
       pushCaptionMenu({ captionLocale: locale });
       setIsOpen(false);
     } else if (locale === '') {
