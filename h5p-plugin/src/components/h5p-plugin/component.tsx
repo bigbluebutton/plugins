@@ -12,6 +12,8 @@ import {
   CurrentPresentation,
   PresentationToolbarButton,
   pluginLogger,
+  RESET_DATA_CHANNEL,
+  DataChannelTypes,
 } from 'bigbluebutton-html-plugin-sdk';
 
 import { GenericComponentRenderFunction } from '../generic-component/component';
@@ -33,7 +35,7 @@ function H5pPlugin(
   const [showingPresentationContent, setShowingPresentationContent] = useState(false);
   const { data: currentUser } = pluginApi.useCurrentUser();
   const currentPresentationResponse = pluginApi.useCurrentPresentation();
-  const [jsonContentResponse, jsonContentPushFunction] = pluginApi.useDataChannel<DataToGenericLink>('jsonContent');
+  const [jsonContentResponse, jsonContentPushFunction, jsonContentDeleteEntries] = pluginApi.useDataChannel<DataToGenericLink>('jsonContent', DataChannelTypes.LATEST_ITEM);
   const [contentJson, setContentJson] = useState<string>(null);
   const [currentText, setCurrentText] = useState<string>(null);
   const [linkThatGeneratedJsonContent, setLinkThatGeneratedJsonContent] = useState<string>();
@@ -99,14 +101,14 @@ function H5pPlugin(
   useEffect(() => {
     if (
       jsonContentResponse.data
-      && jsonContentResponse.data[0].payloadJson
+      && jsonContentResponse?.data[0]?.payloadJson
     ) {
       const contentJsonFromDataChannel = jsonContentResponse
         .data[
           0
         ]?.payloadJson.contentJson;
       setContentJson(contentJsonFromDataChannel);
-      setLinkThatGeneratedJsonContent(jsonContentResponse.data[0].payloadJson.link);
+      setLinkThatGeneratedJsonContent(jsonContentResponse?.data[0]?.payloadJson.link);
       handleChangePresentationAreaContent(true);
     } else if (
       jsonContentResponse.data
@@ -138,7 +140,7 @@ function H5pPlugin(
             tooltip: 'Remove H5P plugin',
             allowed: true,
             onClick: () => {
-              jsonContentPushFunction(null);
+              jsonContentDeleteEntries([RESET_DATA_CHANNEL]);
             },
           }),
         ]);
