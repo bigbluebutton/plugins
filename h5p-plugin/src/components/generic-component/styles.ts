@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 
+interface LockedDivProps {
+  readOnly: boolean;
+}
+
 const ScrollboxVertical = styled.div`
   overflow-y: auto;
   padding: 2px 50px;
@@ -41,4 +45,19 @@ const ScrollboxVertical = styled.div`
   &::-webkit-scrollbar-corner { background: 0 0; }
 `;
 
-export { ScrollboxVertical };
+const LockedDiv = styled.div<LockedDivProps>`
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  z-index: 100;
+  ${({ readOnly }) => !readOnly && `
+    display: none;
+  `}
+  &:hover {
+    cursor: not-allowed;
+  }
+`;
+
+export { ScrollboxVertical, LockedDiv };

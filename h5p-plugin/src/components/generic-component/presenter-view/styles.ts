@@ -11,4 +11,9 @@ const ListItemRender = styled.div`
   }
 `;
 
-export { ListItemRender };
+const H5pGridWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, max(64px, 100%/3)), 1fr));
+`;
+
+export { ListItemRender, H5pGridWrapper };

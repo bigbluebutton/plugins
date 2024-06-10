@@ -1,40 +1,28 @@
+import { DataChannelEntryResponseType } from 'bigbluebutton-html-plugin-sdk/dist/cjs/data-channel/types';
 import * as React from 'react';
-import { PresenterViewerRenderFunctionProps } from './types';
-import { MoreInfoUser, TestResult } from '../types';
+import { PresenterViewComponentProps } from './types';
+import { UserH5pCurrentState } from '../types';
 import * as Styled from './styles';
+import { H5pPlayerManagerComponent } from './h5p-player-manager/component';
 
-const mapObject = (results: TestResult[], usersList: MoreInfoUser[], presenterId: string) => (
-  usersList?.map((item) => {
-    const userResult = results?.filter((r) => (r.userId === item.userId))[0];
-    return item.userId !== presenterId ? (
-      <Styled.ListItemRender
-        key={item.userId}
-      >
-        <span>
-          Name:
-          {' '}
-          {item.name}
-        </span>
-        <span>
-          Score:
-          {' '}
-          {userResult?.testResultObject}
-          {userResult ? '/' : null}
-          {userResult?.testResultMaximumScore}
-        </span>
-      </Styled.ListItemRender>
-    ) : null;
-  })
+const mapObject = (
+  currentUserH5pStateList: DataChannelEntryResponseType<UserH5pCurrentState>[],
+  jsonContent: string,
+) => (
+  currentUserH5pStateList?.map((item) => (
+    <H5pPlayerManagerComponent
+      key={item.payloadJson.userId}
+      currentH5pStateToBeApplied={item.payloadJson.currentState}
+      jsonContent={jsonContent}
+    />
+  ))
 );
 
-function PresenterViewerRenderFunction(props: PresenterViewerRenderFunctionProps) {
-  const { testResult, usersList, currentUserId } = props;
+function PresenterViewComponent(props: PresenterViewComponentProps) {
+  const {
+    h5pLatestStateUpdate, jsonContent,
+  } = props;
 
-  const restults = testResult.data?.map((data) => ({
-    userId: data.payloadJson.userId,
-    testResultObject: data.payloadJson.testResultObject,
-    testResultMaximumScore: data.payloadJson.testResultMaximumScore,
-  } as TestResult));
   return (
     <div
       id="h5p-container"
@@ -49,10 +37,12 @@ function PresenterViewerRenderFunction(props: PresenterViewerRenderFunctionProps
         }
       }
     >
-      <h1>Results of each student</h1>
-      {mapObject(restults, usersList, currentUserId)}
+      <h1>Answers of each student</h1>
+      <Styled.H5pGridWrapper>
+        {mapObject(h5pLatestStateUpdate?.data, jsonContent)}
+      </Styled.H5pGridWrapper>
     </div>
   );
 }
 
-export default PresenterViewerRenderFunction;
+export default PresenterViewComponent;
