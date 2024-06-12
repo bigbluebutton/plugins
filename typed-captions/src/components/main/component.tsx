@@ -111,6 +111,7 @@ function TypedCaptions(
       setCaptionLocale={setCaptionLocale}
       isOpen={isModalOpen}
       onRequestClose={onRequestClose}
+      pluginApi={pluginApi}
       setIsOpen={setIsModalOpen}
     />
   );

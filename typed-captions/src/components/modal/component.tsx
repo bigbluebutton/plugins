@@ -16,6 +16,7 @@ interface TypedCaptionsModalProps {
   pushCaptionMenu: BbbPluginSdk.PushEntryFunction<CaptionMenu>;
   captionLocale: string;
   setCaptionLocale: (value: string) => void;
+  pluginApi: BbbPluginSdk.PluginApi;
 }
 
 const TIMEOUT_RENDER_ERROR = 3000;
@@ -34,6 +35,7 @@ function TypedCaptionsModal(props: TypedCaptionsModalProps) {
     pushCaptionMenu,
     captionLocale: locale,
     setCaptionLocale: setLocale,
+    pluginApi,
   } = props;
 
   const [availableLocales, setAvailableLocales] = React.useState<Locale[]>([]);
@@ -62,6 +64,7 @@ function TypedCaptionsModal(props: TypedCaptionsModalProps) {
       (item) => item.payloadJson.captionLocale === locale,
     )[0]?.entryId;
     if (locale !== '' && !alreadyUsedEntryId) {
+      pluginApi.serverCommands.caption.addLocale(locale);
       pushCaptionMenu({ captionLocale: locale });
       setIsOpen(false);
     } else if (locale === '') {

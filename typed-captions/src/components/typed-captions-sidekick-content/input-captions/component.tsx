@@ -1,4 +1,4 @@
-import { PluginApi, PushEntryFunction } from 'bigbluebutton-html-plugin-sdk';
+import { CaptionsTypeEnum, PluginApi, PushEntryFunction } from 'bigbluebutton-html-plugin-sdk';
 import * as React from 'react';
 
 import Styled from './styles';
@@ -39,6 +39,7 @@ export function TypedCaptionsInput(props: GenericComponentExampleProps) {
       pluginApi.serverCommands.caption.save({
         text: caption,
         locale: captionLocale,
+        captionType: CaptionsTypeEnum.TYPED,
       });
       setCaption('');
     }
