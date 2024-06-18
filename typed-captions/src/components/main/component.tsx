@@ -6,13 +6,13 @@ import {
   ActionButtonDropdownSeparator,
   BbbPluginSdk,
   DataChannelTypes,
-  GenericComponentSidekickContent,
+  GenericContentSidekickArea,
   PluginApi,
 } from 'bigbluebutton-html-plugin-sdk';
 import { TypedCaptionsProps } from './types';
 import { TypedCaptionsModal } from '../modal/component';
 import { CaptionMenu } from '../../common/types';
-import { TypedCaptionsSidekickContent } from '../typed-captions-sidekick-content/component';
+import { TypedCaptionsSidekickArea } from '../typed-captions-sidekick-content/component';
 
 function TypedCaptions(
   { pluginUuid: uuid }: TypedCaptionsProps,
@@ -37,20 +37,20 @@ function TypedCaptions(
     setIsModalOpen(false);
   };
 
+  /// contentFunction, name, section, buttonIcon
   React.useEffect(() => {
     if (captionMenusResponseFromDataChannel?.data && currentUserResponse?.data?.role === 'MODERATOR') {
-      const totalCaptionsLength = captionMenusResponseFromDataChannel?.data?.length;
       const sidekickMenuComponentList = captionMenusResponseFromDataChannel?.data
-        .map((menu, index) => new GenericComponentSidekickContent({
-          menuItemContentMessage: `Transcription (${menu.payloadJson.captionLocale})`,
-          menuItemIcon: 'closed_caption',
-          menuItemTitle: 'Captions',
-          open: (captionLocale !== '') ? (menu.payloadJson.captionLocale === captionLocale) : index === totalCaptionsLength - 1,
+        .map((menu) => new GenericContentSidekickArea({
+          name: `Transcription (${menu.payloadJson.captionLocale})`,
+          buttonIcon: 'closed_caption',
+          section: 'Captions',
+          open: true,
           contentFunction: (element: HTMLElement) => {
             const root = ReactDOM.createRoot(element);
             root.render(
               <React.StrictMode>
-                <TypedCaptionsSidekickContent
+                <TypedCaptionsSidekickArea
                   captionLocale={menu.payloadJson.captionLocale}
                   uuid={uuid}
                 />
@@ -58,7 +58,7 @@ function TypedCaptions(
             );
           },
         }));
-      pluginApi.setGenericComponents(sidekickMenuComponentList);
+      pluginApi.setGenericContentItems(sidekickMenuComponentList);
     }
   }, [captionMenusResponseFromDataChannel]);
 
@@ -99,7 +99,7 @@ function TypedCaptions(
       ]);
     } else {
       pluginApi.setActionButtonDropdownItems([]);
-      pluginApi.setGenericComponents([]);
+      pluginApi.setGenericContentItems([]);
     }
   }, [currentUserResponse, captionMenusResponseFromDataChannel]);
 

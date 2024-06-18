@@ -4,13 +4,13 @@ import * as React from 'react';
 import Styled from './styles';
 import { CaptionMessage } from '../../../common/types';
 
-interface GenericComponentExampleProps {
+interface GenericContentExampleProps {
   pushCaptionMessages: PushEntryFunction<CaptionMessage>;
   captionLocale: string;
   pluginApi: PluginApi;
 }
 
-export function TypedCaptionsInput(props: GenericComponentExampleProps) {
+export function TypedCaptionsInput(props: GenericContentExampleProps) {
   const {
     pushCaptionMessages,
     captionLocale,

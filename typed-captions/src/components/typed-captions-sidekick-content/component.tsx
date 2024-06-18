@@ -6,12 +6,12 @@ import { TypedCaptionsInput } from './input-captions/component';
 import { CaptionMessage } from '../../common/types';
 import { CaptionMessagesList } from './caption-messages-list/component';
 
-interface GenericComponentExampleProps {
+interface GenericContentExampleProps {
   uuid: string;
   captionLocale: string;
 }
 
-export function TypedCaptionsSidekickContent(props: GenericComponentExampleProps) {
+export function TypedCaptionsSidekickArea(props: GenericContentExampleProps) {
   const {
     uuid,
     captionLocale,
@@ -24,16 +24,6 @@ export function TypedCaptionsSidekickContent(props: GenericComponentExampleProps
 
   return (
     <Styled.CaptionsWrapper>
-      <Styled.HeaderWrapper>
-        <Styled.SidekickMenuMinimizer
-          onClick={() => {
-            pluginApi.uiCommands.sidekickContent.minimizeCurrentPanel();
-          }}
-        >
-          <i className="icon-bbb-left_arrow" />
-          Transcription
-        </Styled.SidekickMenuMinimizer>
-      </Styled.HeaderWrapper>
       <CaptionMessagesList
         captionMessagesResponse={captionMessagesResponseFromDataChannel?.data}
       />
