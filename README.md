@@ -2,7 +2,7 @@
 
 ## List of official plugins:
 
-Here is a list of the official plugins supported by Bigbluebutton, along with their respective repository:
+Here is a list of the official open source plugins supported by BigBlueButton, along with their respective repository:
 
 - plugin-decrease-volume-on-speak - https://github.com/bigbluebutton/plugin-decrease-volume-on-speak
 - plugin-generic-link-share - https://github.com/bigbluebutton/plugin-generic-link-share
@@ -14,4 +14,4 @@ Here is a list of the official plugins supported by Bigbluebutton, along with th
 
 ## Developing
 
-If you want to develop some of that list, please refer back to https://github.com/bigbluebutton/bigbluebutton-html-plugin-sdk?tab=readme-ov-file#running-the-plugin-from-source
+If you want to play around or modify one of these plugins, please refer back to https://github.com/bigbluebutton/bigbluebutton-html-plugin-sdk?tab=readme-ov-file#running-the-plugin-from-source
