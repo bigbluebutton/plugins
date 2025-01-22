@@ -35,6 +35,8 @@ Plugins can also [invoke server-side functionalities](https://github.com/bigblue
 
 For analytical purposes, plugins can log information to be displayed in the [Learning Analytics Dashboard](https://github.com/bigbluebutton/bigbluebutton-html-plugin-sdk/blob/main/README.md#learning-analytics-dashboard-integration), allowing for monitoring and evaluating participant engagement in the session.
 
+Additionally, plugins can [record events](https://github.com/bigbluebutton/bigbluebutton-html-plugin-sdk?tab=readme-ov-file#event-persistence), which are saved in the `events.xml` file for future processing. This enables further analysis and insights into session activities.
+
 Finally, plugins can register [external data sources](https://github.com/bigbluebutton/bigbluebutton-html-plugin-sdk/blob/main/README.md#external-data-resources), which are accessed securely and efficiently by the BigBlueButton server. These data sources can provide additional information, such as user data from the LMS (Learning Management System), further enriching the session experience.
 
 
