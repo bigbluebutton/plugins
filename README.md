@@ -1,10 +1,10 @@
-# BigBlueButton Plugins {#bigbluebutton-plugins}
+# BigBlueButton Plugins
 
-## What are BigBlueButton Plugins? {#what-are-bigbluebutton-plugins}
+## What are BigBlueButton Plugins?
 
 BigBlueButton plugins are small software components developed to expand its functionalities. With the plugin architecture, developers can add new features without modifying the core BigBlueButton source code.
 
-## What are the existing BigBlueButton Plugins? {#existing-bigbluebutton-plugins}
+## What are the existing BigBlueButton Plugins?
 
 Here is a list of the official open source plugins supported by BigBlueButton, along with their respective repository.
 
@@ -17,7 +17,7 @@ Here is a list of the official open source plugins supported by BigBlueButton, a
 | plugin-code-highlight           | Serves as a chat tool for students and users to demonstrate and comprehend code blocks in simpler, more visual ways by adding code syntax highlighting to messages.                                          | [Repository](https://github.com/bigbluebutton/plugin-code-highlight)                                          |
 | plugin-pick-random-user         | Provides moderators with a modal to randomly select a user (viewer or moderator) from the list of participants present in a session, facilitating interactive activities.                                     | [Repository](https://github.com/bigbluebutton/plugin-pick-random-user)                                        |
 | plugin-typed-captions           | Implements a feature allowing users to type captions during a session, displaying them at the bottom of the presentation area, enhancing accessibility for participants.                                     | [Repository](https://github.com/bigbluebutton/plugin-typed-captions)                                          |
-## Capabilities and technical details {#capabilities-technical-details}
+## Capabilities and technical details
 
 Plugins are activated at the session creation stage, meaning the system responsible for creating the session must specify which plugins will be used. To enable a plugin in a session, the system administrator only needs to provide the URL of the plugin's *manifest* file. This file contains the necessary information for loading the plugin in the browser, as well as details about its integrations with the server. Plugins may also accept configurations; in such cases, in addition to the manifest URL, the system responsible for creating the session must also specify these configurations.
 
@@ -38,6 +38,6 @@ For analytical purposes, plugins can log information to be displayed in the [Lea
 Finally, plugins can register [external data sources](https://github.com/bigbluebutton/bigbluebutton-html-plugin-sdk/blob/main/README.md#external-data-resources), which are accessed securely and efficiently by the BigBlueButton server. These data sources can provide additional information, such as user data from the LMS (Learning Management System), further enriching the session experience.
 
 
-## Developing {#developing}
+## Developing
 
 If you want to play around or modify one of these plugins, or create a new one, please refer back to https://github.com/bigbluebutton/bigbluebutton-html-plugin-sdk
