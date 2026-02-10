@@ -23,7 +23,7 @@ Here is a list of the official open source plugins supported by BigBlueButton, a
 | plugin-live-transcription           | This plugins adds a panel displaying the transcription generated from users who opted in having their browser auto-generate captions from their audio.                                     | [Repository](https://github.com/bigbluebutton/plugin-live-transcription)                                      | [Manifest URL](https://bigbluebutton.nyc3.digitaloceanspaces.com/plugins/bbb30/latest/live-transcription-plugin/manifest.json)  |
 | bbb-plugin-picture-in-picture           | This plugins adds a the capability to view the BigBlueButton session while working in other contexts.                                      | [Repository](https://github.com/bigbluebutton/bbb-plugin-picture-in-picture)                                      |   |
 | bbb-plugin-pin-message           | This plugins adds a the capability to pin a chat message.                                      | [Repository](https://github.com/bigbluebutton/plugin-pin-message)                                      |   |
-
+| bbb-plugin-reaction-stack           | This plugins adds a different view for user reactions.                                      | [Repository](https://github.com/bigbluebutton/bbb-plugin-reaction-stack)                                      |   |
 
 \* these links are for demonstration purposes, in production use your own hosting.
 
