@@ -27,6 +27,13 @@ Here is a list of the official open source plugins supported by BigBlueButton, a
 
 \* these links are for demonstration purposes, in production use your own hosting.
 
+Here is a list of unofficial, community-contributed plugins.
+
+| Plugin Name                         | Maturity   | Description                                                                                                                                                                                                 | Repository Link                                                                                           |
+|-------------------------------------|------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|
+| bbb-plugin-remote-desktop           | Production | Allows interactive use of VNC desktops (both view and operate) in the presentation area                      | [Repository](https://github.com/BrentBaccala/bbb-plugin-remote-desktop)
+| bbb-plugin-rtt-monitor              | Production | Shows moderators a graph of measured round trip times                                                        | [Repository](https://github.com/BrentBaccala/bbb-plugin-rtt-monitor)
+
 ## Capabilities and technical details
 
 Plugins are activated at the session creation stage, meaning the system responsible for creating the session must specify which plugins will be used. To enable a plugin in a session, the system administrator only needs to provide the URL of the plugin's *manifest* file. This file contains the necessary information for loading the plugin in the browser, as well as details about its integrations with the server. Plugins may also accept configurations; in such cases, in addition to the manifest URL, the system responsible for creating the session must also specify these configurations.
