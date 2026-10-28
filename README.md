@@ -34,6 +34,7 @@ Here is a list of unofficial, community-contributed plugins.
 | bbb-plugin-remote-desktop           | Production | Allows interactive use of VNC desktops (both view and operate) in the presentation area                      | [Repository](https://github.com/BrentBaccala/bbb-plugin-remote-desktop)
 | bbb-plugin-rtt-monitor              | Production | Shows moderators a graph of measured round trip times                                                        | [Repository](https://github.com/BrentBaccala/bbb-plugin-rtt-monitor)
 | bbb-plugin-log-collector             | Production | Captures client-side logs and connection events and lets users download them as a ZIP to diagnose unexplained audio disconnects. Pseudonymizes other participants, shows a GDPR consent dialog, and never sends data anywhere.                                                        | [Repository](https://github.com/michelleDeko/bbb-plugin-log-collector)
+| bbb-plugin-scrollable-sidebar             | Production (v3.0 only) | Makes the BigBlueButton sidebar scrollable (useful in case you're having many plugins that add their own sidepanel entry)                                                        | [Repository](https://github.com/michelleDeko/bbb-plugin-scrollable-sidebar)
 
 ## Capabilities and technical details
 
